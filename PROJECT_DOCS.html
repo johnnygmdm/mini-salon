@@ -66,12 +66,13 @@
         <div class="text-xs font-bold text-slate-400 tracking-wider uppercase mb-3 px-2">목차 바로가기</div>
         <a href="#overview" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">1. 프로젝트 개요</a>
         <a href="#architecture" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">2. 전체 시스템 구성도</a>
-        <a href="#database" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">3. 데이터베이스 & 보안</a>
-        <a href="#desktop" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">4. PC 데스크톱 앱</a>
-        <a href="#autoupdate" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">5. 자동 업데이트 엔진</a>
-        <a href="#web" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">6. 모바일/웹 클라이언트</a>
-        <a href="#run-build" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">7. 실행 및 빌드 방법</a>
-        <a href="#release-guide" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">8. 신규 버전 릴리즈 가이드</a>
+        <a href="#cloud-infra" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">3. Supabase & Cloudflare</a>
+        <a href="#database" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">4. 데이터베이스 & 보안</a>
+        <a href="#desktop" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">5. PC 데스크톱 앱</a>
+        <a href="#autoupdate" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">6. 자동 업데이트 엔진</a>
+        <a href="#web" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">7. 모바일/웹 클라이언트</a>
+        <a href="#run-build" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">8. 실행 및 빌드 방법</a>
+        <a href="#release-guide" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">9. 신규 버전 릴리즈 가이드</a>
       </div>
     </aside>
 
@@ -159,10 +160,134 @@ graph TD
         </div>
       </section>
 
-      <!-- 3. 데이터베이스 & 보안 -->
-      <section id="database" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm scroll-mt-6">
+      <!-- 3. 핵심 클라우드 기술 (Supabase & Cloudflare Pages) -->
+      <section id="cloud-infra" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm scroll-mt-6">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">3</div>
+          <h2 class="text-2xl font-bold text-slate-900">핵심 클라우드 기술 (Cloudflare Pages & Supabase)</h2>
+        </div>
+        <p class="text-slate-600 leading-relaxed mb-6">
+          본 프로젝트는 전통적인 24시간 가동 유료 서버(EC2 등)를 두지 않고, <strong>글로벌 엣지 정적 호스팅(Cloudflare Pages)</strong>과 <strong>클라우드 관계형 데이터베이스(Supabase)</strong>의 조합을 통해 <strong>유지비 0원, 무제한 대역폭, 초고속 엣지 응답 속도</strong>를 달성했습니다.
+        </p>
+
+        <div class="space-y-6">
+          <!-- Supabase 상세 -->
+          <div class="p-6 rounded-2xl bg-emerald-50/50 border border-emerald-200">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg font-bold shadow-md shadow-emerald-200">
+                <i class="fa-solid fa-bolt"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-emerald-950">1) Supabase (수파베이스) - 엔터프라이즈 백엔드</h3>
+                <p class="text-xs text-emerald-700">"Firebase의 오픈소스 대안"으로 불리는 PostgreSQL 기반 클라우드 BaaS(Backend-as-a-Service)</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-700 mt-4">
+              <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm space-y-1.5">
+                <div class="font-bold text-emerald-900 flex items-center gap-1.5 text-sm">
+                  <i class="fa-solid fa-database text-emerald-600"></i> 순수 PostgreSQL 15 관계형 DB
+                </div>
+                <p class="text-slate-600 leading-relaxed">
+                  NoSQL(문서형 DB)과 달리 고객(1)과 시술(N) 간의 엄격한 <strong>외래키(Foreign Key) 제약</strong>과 <strong>CASCADE 삭제</strong>, 트랜잭션을 지원하여 데이터 꼬임이나 결측을 원천 방지합니다.
+                </p>
+              </div>
+
+              <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm space-y-1.5">
+                <div class="font-bold text-emerald-900 flex items-center gap-1.5 text-sm">
+                  <i class="fa-solid fa-shield-halved text-emerald-600"></i> Supabase Auth & JWT 세션
+                </div>
+                <p class="text-slate-600 leading-relaxed">
+                  별도의 복잡한 회원/로그인 서버를 만들 필요 없이 표준 JWT 토큰 기반 인증을 제공합니다. PC 앱(Python)과 웹(Next.js)이 <strong>완벽히 동일한 로그인 세션</strong>을 공유합니다.
+                </p>
+              </div>
+
+              <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm space-y-1.5">
+                <div class="font-bold text-emerald-900 flex items-center gap-1.5 text-sm">
+                  <i class="fa-solid fa-lock text-emerald-600"></i> Row Level Security (행 수준 보안, RLS)
+                </div>
+                <p class="text-slate-600 leading-relaxed">
+                  백엔드 소스코드가 아닌 <strong>데이터베이스 자체에 보안 정책을 정의</strong>하여, 올바른 인증 토큰을 가진 관리자만 데이터에 접근할 수 있도록 안전하게 격리합니다.
+                </p>
+              </div>
+
+              <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm space-y-1.5">
+                <div class="font-bold text-emerald-900 flex items-center gap-1.5 text-sm">
+                  <i class="fa-solid fa-network-wired text-emerald-600"></i> PostgREST 자동 RESTful API
+                </div>
+                <p class="text-slate-600 leading-relaxed">
+                  SQL 테이블을 생성하면 별도의 API 코딩 없이 즉시 CRUD REST API가 생성되며, <code>supabase-py</code> 및 <code>@supabase/supabase-js</code> 공식 SDK로 빠르고 일관되게 통신합니다.
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-4 p-3 bg-white/80 rounded-xl border border-emerald-100 text-xs text-emerald-800 flex items-center justify-between">
+              <span>📍 호스팅 리전: <strong>AWS 아시아 태평양 (AP-South-1 뭄바이)</strong></span>
+              <span>🔒 프로토콜: <strong>TLS 1.3 암호화 HTTPS / 풀러 포트 5432</strong></span>
+            </div>
+          </div>
+
+          <!-- Cloudflare Pages 상세 -->
+          <div class="p-6 rounded-2xl bg-amber-50/50 border border-amber-200">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-9 h-9 rounded-xl bg-amber-600 text-white flex items-center justify-center text-lg font-bold shadow-md shadow-amber-200">
+                <i class="fa-solid fa-cloud"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-amber-950">2) Cloudflare Pages (클라우드플레어 페이지스) - 엣지 호스팅</h3>
+                <p class="text-xs text-amber-700">전 세계 300개 이상 데이터센터 기반의 Jamstack 정적 사이트 및 글로벌 CDN 배포 플랫폼</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-700 mt-4">
+              <div class="bg-white p-4 rounded-xl border border-amber-100 shadow-sm space-y-1.5">
+                <div class="font-bold text-amber-900 flex items-center gap-1.5 text-sm">
+                  <i class="fa-solid fa-gauge-high text-amber-600"></i> 서울 포함 전세계 Anycast CDN
+                </div>
+                <p class="text-slate-600 leading-relaxed">
+                  사용자와 물리적으로 가장 가까운 엣지 서버(서울 PoP 등)에서 웹 파일(HTML/JS/CSS)을 캐싱하여 전달하므로, <strong>50ms(0.05초) 미만의 초고속 접속</strong>이 가능합니다.
+                </p>
+              </div>
+
+              <div class="bg-white p-4 rounded-xl border border-amber-100 shadow-sm space-y-1.5">
+                <div class="font-bold text-amber-900 flex items-center gap-1.5 text-sm">
+                  <i class="fa-solid fa-wallet text-amber-600"></i> 무제한 무료 대역폭 (0원 유지비)
+                </div>
+                <p class="text-slate-600 leading-relaxed">
+                  타 호스팅(AWS S3, Vercel 등)과 달리 Cloudflare Pages는 <strong>대역폭(트래픽) 비용이 100% 무료</strong>로 제공되어 트래픽 폭증 시에도 요금 청구 걱정이 전혀 없습니다.
+                </p>
+              </div>
+
+              <div class="bg-white p-4 rounded-xl border border-amber-100 shadow-sm space-y-1.5">
+                <div class="font-bold text-amber-900 flex items-center gap-1.5 text-sm">
+                  <i class="fa-solid fa-code-branch text-amber-600"></i> PC 앱 자동 업데이트 허브
+                </div>
+                <p class="text-slate-600 leading-relaxed">
+                  웹 화면뿐만 아니라 데스크톱 앱의 최신 버전 매니페스트(<code>https://mini-salon.pages.dev/version.json</code>)를 호스팅하여 24시간 무중단 버전 체크를 수행합니다.
+                </p>
+              </div>
+
+              <div class="bg-white p-4 rounded-xl border border-amber-100 shadow-sm space-y-1.5">
+                <div class="font-bold text-amber-900 flex items-center gap-1.5 text-sm">
+                  <i class="fa-solid fa-certificate text-amber-600"></i> 자동 SSL/TLS 보안 인증서
+                </div>
+                <p class="text-slate-600 leading-relaxed">
+                  도메인 연결 시 Let's Encrypt / Cloudflare 범용 SSL 인증서가 자동으로 발급 및 무한 갱신되어 브라우저에서 안전한 자물쇠 표시(HTTPS)가 유지됩니다.
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-4 p-3 bg-white/80 rounded-xl border border-amber-100 text-xs text-amber-800">
+              💡 <strong>25MB 파일 크기 제한과 GitHub Releases 하이브리드 아키텍처:</strong> Cloudflare Pages는 정적 자산 1개당 최대 25 MiB까지만 업로드를 허용합니다. 우리 PC 앱(<code>MiniSalon.exe</code>)은 약 73 MB이므로, 실행 파일 다운로드는 <strong>GitHub Releases CDN</strong>을 사용하고 Pages에는 버전 매니페스트(<code>version.json</code>)만 배포하는 최적의 분산 전략을 채택했습니다.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. 데이터베이스 & 보안 -->
+      <section id="database" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm scroll-mt-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">4</div>
           <h2 class="text-2xl font-bold text-slate-900">데이터베이스 설계 및 보안 (Database & Security)</h2>
         </div>
 
@@ -272,10 +397,10 @@ EXECUTE FUNCTION public.block_new_user_signup();</code></pre>
         </div>
       </section>
 
-      <!-- 4. 데스크톱 앱 상세 -->
+      <!-- 5. PC 데스크톱 앱 상세 -->
       <section id="desktop" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm scroll-mt-6">
         <div class="flex items-center gap-3 mb-4">
-          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">4</div>
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">5</div>
           <h2 class="text-2xl font-bold text-slate-900">PC 데스크톱 앱 사양 (`/desktop`)</h2>
         </div>
         
@@ -329,10 +454,10 @@ EXECUTE FUNCTION public.block_new_user_signup();</code></pre>
     └── update_dialog.py     # 신규 버전 알림 및 다운로드 진행률 창</code></pre>
       </section>
 
-      <!-- 5. 자동 업데이트 엔진 -->
+      <!-- 6. 자동 업데이트 엔진 -->
       <section id="autoupdate" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm scroll-mt-6">
         <div class="flex items-center gap-3 mb-4">
-          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">5</div>
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">6</div>
           <h2 class="text-2xl font-bold text-slate-900">자동 업데이트 엔진 설계 (Auto-Updater)</h2>
         </div>
         <p class="text-slate-600 leading-relaxed mb-4">
@@ -375,10 +500,10 @@ sequenceDiagram
         </div>
       </section>
 
-      <!-- 6. 웹 클라이언트 상세 -->
+      <!-- 7. 웹 클라이언트 상세 -->
       <section id="web" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm scroll-mt-6">
         <div class="flex items-center gap-3 mb-4">
-          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">6</div>
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">7</div>
           <h2 class="text-2xl font-bold text-slate-900">모바일 / 웹 클라이언트 사양 (`/web`)</h2>
         </div>
         <p class="text-slate-600 leading-relaxed mb-4">
@@ -410,10 +535,10 @@ sequenceDiagram
         </div>
       </section>
 
-      <!-- 7. 실행 및 빌드 방법 -->
+      <!-- 8. 실행 및 빌드 방법 -->
       <section id="run-build" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm scroll-mt-6">
         <div class="flex items-center gap-3 mb-4">
-          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">7</div>
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">8</div>
           <h2 class="text-2xl font-bold text-slate-900">실행 및 빌드 방법 (How to Run & Build)</h2>
         </div>
 
@@ -445,10 +570,10 @@ npx wrangler pages deploy out --project-name=mini-salon --branch=master</code></
         </div>
       </section>
 
-      <!-- 8. 신규 버전 릴리즈 가이드 -->
+      <!-- 9. 신규 버전 릴리즈 가이드 -->
       <section id="release-guide" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm scroll-mt-6">
         <div class="flex items-center gap-3 mb-4">
-          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">8</div>
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">9</div>
           <h2 class="text-2xl font-bold text-slate-900">신규 버전 배포 가이드 (Release Guide)</h2>
         </div>
         <p class="text-slate-600 leading-relaxed mb-4">
