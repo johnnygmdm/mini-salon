@@ -8,7 +8,6 @@ import os
 import json
 import subprocess
 import tempfile
-import urllib.request
 from pathlib import Path
 from typing import Optional, Dict, Any
 import httpx
@@ -51,9 +50,9 @@ def check_update_sync(timeout: float = 3.0) -> Optional[Dict[str, Any]]:
 
 class UpdateCheckWorker(QThread):
     """백그라운드에서 최신 버전 정보 확인"""
-    update_available = Signal(dict)  # 새 버전 정보 딕셔너리
-    no_update = Signal()            # 최신 버전임
-    check_failed = Signal(str)      # 검사 실패
+    update_available = Signal(dict)
+    no_update = Signal()
+    check_failed = Signal(str)
 
     def run(self):
         try:
@@ -66,7 +65,6 @@ class UpdateCheckWorker(QThread):
                     data = res.json()
                     latest_ver_str = data.get("version", "1.0.0")
 
-                    # semver 비교
                     if version.parse(latest_ver_str) > version.parse(CURRENT_VERSION):
                         self.update_available.emit(data)
                     else:
@@ -79,9 +77,9 @@ class UpdateCheckWorker(QThread):
 
 class DownloadWorker(QThread):
     """새로운 버전의 실행 파일 스트리밍 다운로드 (진행률 표시)"""
-    progress = Signal(int)          # 다운로드 퍼센트 (0~100)
-    download_finished = Signal(str) # 다운로드된 임시 파일 경로
-    download_failed = Signal(str)   # 실패 메시지
+    progress = Signal(int)
+    download_finished = Signal(str)
+    download_failed = Signal(str)
 
     def __init__(self, download_url: str):
         super().__init__()
@@ -92,7 +90,14 @@ class DownloadWorker(QThread):
             temp_dir = Path(tempfile.gettempdir())
             target_path = temp_dir / "MiniSalon_NewVersion.exe"
 
-            with httpx.Client(timeout=60.0, follow_redirects=True) as client:
+            # 기존 임시 파일 있으면 삭제
+            if target_path.exists():
+                try:
+                    target_path.unlink()
+                except Exception:
+                    pass
+
+            with httpx.Client(timeout=120.0, follow_redirects=True) as client:
                 with client.stream("GET", self.download_url) as resp:
                     resp.raise_for_status()
                     total_bytes = int(resp.headers.get("content-length", 0))
@@ -115,27 +120,76 @@ class DownloadWorker(QThread):
 
 def apply_update_and_restart(new_exe_path: str):
     """
-    다운로드된 새 exe를 기존 실행 파일 위치에 덮어쓰고 앱 재실행
-    배치 스크립트를 독립 프로세스로 띄운 뒤 현재 프로세스 종료
+    안전한 프로세스 완전 종료 대기, 파일 교체 및 새 버전 재시작 (PowerShell 기반)
     """
     current_exe = get_current_executable()
+    current_pid = os.getpid()
+    target_dir = current_exe.parent
+
     temp_dir = Path(tempfile.gettempdir())
-    bat_path = temp_dir / "mini_salon_apply_update.bat"
+    ps_path = temp_dir / "mini_salon_apply_update.ps1"
 
-    bat_script = f"""@echo off
-chcp 65001 > nul
-echo Mini Salon 업데이트를 적용하는 중입니다...
-timeout /t 2 /nobreak > nul
-copy /y "{new_exe_path}" "{current_exe}" > nul
-del /f /q "{new_exe_path}" > nul
-start "" "{current_exe}"
-del "%~f0"
+    # PowerShell 스크립트로 안전한 프로세스 종료 대기, 파일 교체 및 새 프로세스 구동
+    # PyInstaller의 _MEIPASS2 환경변수를 비워주지 않으면 새 프로세스가
+    # 종료된 이전 프로세스의 임시 폴더(_MEIxxxxx)를 참조하여 DLL 로드 에러(0x7e)가 발생하므로 완전히 제거
+    ps_content = f"""
+$ErrorActionPreference = 'SilentlyContinue'
+$targetExe = '{str(current_exe).replace("'", "''")}'
+$newExe = '{str(new_exe_path).replace("'", "''")}'
+$targetPid = {current_pid}
+$workDir = '{str(target_dir).replace("'", "''")}'
+
+# 1. 이전 프로세스가 완전히 종료될 때까지 대기 (최대 15초)
+for ($i = 0; $i -lt 30; $i++) {{
+    if (-not (Get-Process -Id $targetPid -ErrorAction SilentlyContinue)) {{
+        break
+    }}
+    Start-Sleep -Milliseconds 500
+}}
+Start-Sleep -Seconds 1
+
+# 2. 실행 파일 교체 (최대 10회 재시도)
+for ($i = 0; $i -lt 10; $i++) {{
+    try {{
+        Copy-Item -LiteralPath $newExe -Destination $targetExe -Force -ErrorAction Stop
+        break
+    }} catch {{
+        Start-Sleep -Seconds 1
+    }}
+}}
+
+# 3. 임시 다운로드 파일 삭제
+Remove-Item -LiteralPath $newExe -Force -ErrorAction SilentlyContinue
+
+# 4. PyInstaller 자식 프로세스 상속 방지를 위해 환경변수 제거
+Remove-Item env:_MEIPASS2 -ErrorAction SilentlyContinue
+Remove-Item env:_MEIPASS -ErrorAction SilentlyContinue
+
+# 5. 새 버전의 MiniSalon 실행
+Start-Process -FilePath $targetExe -WorkingDirectory $workDir
+
+# 6. 임시 스크립트 자신 삭제
+Start-Sleep -Seconds 2
+Remove-Item -LiteralPath $MyInvocation.MyCommand.Path -Force -ErrorAction SilentlyContinue
 """
-    with open(bat_path, "w", encoding="utf-8") as f:
-        f.write(bat_script)
+    with open(ps_path, "w", encoding="utf-8") as f:
+        f.write(ps_content)
 
+    clean_env = os.environ.copy()
+    clean_env.pop("_MEIPASS2", None)
+    clean_env.pop("_MEIPASS", None)
+
+    # PowerShell 비동기 실행 (백그라운드에서 동작)
     subprocess.Popen(
-        ["cmd.exe", "/c", str(bat_path)],
+        [
+            "powershell.exe",
+            "-WindowStyle", "Hidden",
+            "-ExecutionPolicy", "Bypass",
+            "-File", str(ps_path)
+        ],
+        env=clean_env,
         creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0
     )
-    sys.exit(0)
+
+    # 현재 프로세스 즉시 및 확실한 종료
+    os._exit(0)

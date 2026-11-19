@@ -142,6 +142,7 @@ class UpdateDialog(QDialog):
             "다운로드가 완료되었습니다!\n확인을 누르면 프로그램이 자동으로 재시작되며 새 버전이 적용됩니다."
         )
 
+        self.close()
         apply_update_and_restart(downloaded_file_path)
 
     def _on_failed(self, error_msg: str):
