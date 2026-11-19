@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal, QThread
 from services.auth_service import AuthService
-from config import is_configured, SUPABASE_URL
+from config import is_configured, SUPABASE_URL, CLIENT_NAME, CLIENT_SUBTITLE, LOGO_ICON
 
 
 class AuthWorker(QThread):
@@ -42,7 +42,7 @@ class LoginDialog(QDialog):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Mini Salon CRM - 로그인")
+        self.setWindowTitle(f"{LOGO_ICON} {CLIENT_NAME} - 로그인")
         self.setFixedSize(400, 480)
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
 
@@ -57,12 +57,12 @@ class LoginDialog(QDialog):
         main_layout.setSpacing(16)
 
         # 헤더 타이틀
-        title_label = QLabel("✂️ Mini Salon CRM")
+        title_label = QLabel(f"{LOGO_ICON} {CLIENT_NAME}")
         title_label.setObjectName("titleLabel")
         title_label.setAlignment(Qt.AlignCenter)
         main_layout.addWidget(title_label)
 
-        sub_label = QLabel("미니 미용실 고객·시술 통합 관리")
+        sub_label = QLabel(f"{CLIENT_SUBTITLE} (원장님 전용)")
         sub_label.setObjectName("subtitleLabel")
         sub_label.setAlignment(Qt.AlignCenter)
         main_layout.addWidget(sub_label)

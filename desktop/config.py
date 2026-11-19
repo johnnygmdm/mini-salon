@@ -18,6 +18,41 @@ else:
 PROJECT_ROOT = DESKTOP_DIR.parent
 SESSION_FILE = DESKTOP_DIR / ".session.json"
 
+# 클라이언트 브랜드 및 커스텀 설정 로드
+def load_client_config() -> dict:
+    candidates = [
+        DESKTOP_DIR / "client_config.json",
+        PROJECT_ROOT / "client_config.json",
+    ]
+    meipass = getattr(sys, "_MEIPASS", None)
+    if meipass:
+        candidates.insert(0, Path(meipass) / "client_config.json")
+
+    for path in candidates:
+        if path.exists():
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except Exception:
+                pass
+    return {}
+
+CLIENT_CONFIG = load_client_config()
+CLIENT_NAME = CLIENT_CONFIG.get("clientName", "Mini Salon")
+CLIENT_SUBTITLE = CLIENT_CONFIG.get("clientSubtitle", "1인 미용실 고객 & 시술 관리")
+CATEGORY = CLIENT_CONFIG.get("category", "CRM")
+LOGO_ICON = CLIENT_CONFIG.get("logoIcon", "✂️")
+BRAND_COLORS = CLIENT_CONFIG.get("colors", {
+    "primary": "#4f46e5",
+    "primaryHover": "#4338ca",
+    "primaryLight": "#eef2ff",
+    "primaryBorder": "#c7d2fe",
+    "textOnPrimary": "#ffffff"
+})
+DEFAULT_MENU_ITEMS = CLIENT_CONFIG.get("defaultMenuItems", [
+    "커트", "일반펌", "열펌/매직", "전체염색", "뿌리염색", "클리닉", "스캘프케어"
+])
+
 # .env 파일 로드 (desktop/.env 우선, 없으면 프로젝트 루트 .env)
 env_path = DESKTOP_DIR / ".env"
 if not env_path.exists():
@@ -28,8 +63,18 @@ if env_path.exists():
 else:
     load_dotenv()
 
-SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip() or DEFAULT_SUPABASE_URL
-SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "").strip() or DEFAULT_SUPABASE_ANON_KEY
+# client_config.json의 supabase 설정 우선 적용, 없으면 .env -> 디폴트 순
+_cfg_sb = CLIENT_CONFIG.get("supabase", {})
+SUPABASE_URL = (
+    os.getenv("SUPABASE_URL", "").strip()
+    or _cfg_sb.get("url", "").strip()
+    or DEFAULT_SUPABASE_URL
+)
+SUPABASE_ANON_KEY = (
+    os.getenv("SUPABASE_ANON_KEY", "").strip()
+    or _cfg_sb.get("anonKey", "").strip()
+    or DEFAULT_SUPABASE_ANON_KEY
+)
 
 _supabase_client: Client | None = None
 

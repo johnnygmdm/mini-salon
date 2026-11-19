@@ -8,12 +8,13 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, QDate
 from services.treatment_service import TreatmentService
+from config import DEFAULT_MENU_ITEMS
 
 
 class TreatmentDialog(QDialog):
     """시술 내역 추가를 위한 다이얼로그"""
 
-    COMMON_SERVICES = [
+    COMMON_SERVICES = DEFAULT_MENU_ITEMS or [
         "남성 컷",
         "여성 컷",
         "학생 컷",

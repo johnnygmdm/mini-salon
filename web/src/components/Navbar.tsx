@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Scissors, LogOut, RefreshCw, User } from "lucide-react";
+import { LogOut, RefreshCw, User } from "lucide-react";
+import { siteConfig } from "../config/site-config";
 
 interface NavbarProps {
   userEmail: string;
@@ -21,15 +22,15 @@ export default function Navbar({
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
         {/* 로고 & 타이틀 */}
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-sm">
-            <Scissors className="h-5 w-5" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-sm text-base font-bold">
+            {siteConfig.logoIcon}
           </div>
           <div>
             <h1 className="text-base font-bold tracking-tight text-slate-900 sm:text-lg">
-              Mini Salon <span className="text-indigo-600">CRM</span>
+              {siteConfig.clientName} <span className="text-indigo-600">{siteConfig.category}</span>
             </h1>
             <p className="hidden text-xs text-slate-500 sm:block">
-              클라우드 실시간 동기화
+              {siteConfig.clientSubtitle}
             </p>
           </div>
         </div>

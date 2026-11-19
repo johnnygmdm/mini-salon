@@ -1,0 +1,30 @@
+{
+  "clientName": "Mini Salon",
+  "clientSubtitle": "1인 미용실 고객 & 시술 관리",
+  "category": "CRM",
+  "logoIcon": "✂️",
+  "theme": "indigo",
+  "colors": {
+    "primary": "#4f46e5",
+    "primaryHover": "#4338ca",
+    "primaryLight": "#eef2ff",
+    "primaryBorder": "#c7d2fe",
+    "textOnPrimary": "#ffffff"
+  },
+  "defaultMenuItems": [
+    "커트",
+    "일반펌",
+    "열펌/매직",
+    "전체염색",
+    "뿌리염색",
+    "클리닉",
+    "스캘프케어"
+  ],
+  "adminEmail": "ase3612@naver.com",
+  "supabase": {
+    "url": "https://plfgpjvqctkynqpzvobz.supabase.co",
+    "anonKey": "sb_publishable_FhOIW0yO-BfGg5BC1hbnqQ_q0NMVO1D"
+  },
+  "version": "1.0.1",
+  "updateCheckUrl": "https://mini-salon.pages.dev/version.json"
+}

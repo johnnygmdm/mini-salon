@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Customer } from "@/types";
 import { X, Loader2, Sparkles } from "lucide-react";
+import { siteConfig } from "@/config/site-config";
 
 interface TreatmentModalProps {
   isOpen: boolean;
@@ -15,21 +16,23 @@ interface TreatmentModalProps {
   }) => Promise<void>;
 }
 
-const COMMON_SERVICES = [
-  "남성 컷",
-  "여성 컷",
-  "학생 컷",
-  "디자인 펌",
-  "열펌 / 세팅펌",
-  "볼륨 매직",
-  "전체 염색",
-  "뿌리 염색",
-  "탈색",
-  "모발 클리닉",
-  "두피 스케일링",
-  "다운펌",
-  "드라이 / 스타일링",
-];
+const COMMON_SERVICES = siteConfig.defaultMenuItems && siteConfig.defaultMenuItems.length > 0
+  ? siteConfig.defaultMenuItems
+  : [
+      "남성 컷",
+      "여성 컷",
+      "학생 컷",
+      "디자인 펌",
+      "열펌 / 세팅펌",
+      "볼륨 매직",
+      "전체 염색",
+      "뿌리 염색",
+      "탈색",
+      "모발 클리닉",
+      "두피 스케일링",
+      "다운펌",
+      "드라이 / 스타일링",
+    ];
 
 export default function TreatmentModal({
   isOpen,

@@ -18,6 +18,7 @@ from ui.customer_dialog import CustomerDialog
 from ui.treatment_dialog import TreatmentDialog
 from ui.update_dialog import UpdateDialog
 from services.updater_service import CURRENT_VERSION, UpdateCheckWorker
+from config import CLIENT_NAME, CLIENT_SUBTITLE, LOGO_ICON, BRAND_COLORS
 
 
 class MainWindow(QMainWindow):
@@ -29,7 +30,7 @@ class MainWindow(QMainWindow):
         self.selected_customer: Optional[Dict[str, Any]] = None
         self.customers_cache: List[Dict[str, Any]] = []
 
-        self.setWindowTitle("Mini Salon CRM - 고객 & 시술 관리")
+        self.setWindowTitle(f"{LOGO_ICON} {CLIENT_NAME} - 고객 & 시술 관리")
         self.resize(1180, 750)
         self.setMinimumSize(960, 600)
 
@@ -85,9 +86,9 @@ class MainWindow(QMainWindow):
 
         # 로고 & 타이틀
         title_box = QVBoxLayout()
-        title_label = QLabel("✂️ Mini Salon CRM")
+        title_label = QLabel(f"{LOGO_ICON} {CLIENT_NAME}")
         title_label.setObjectName("titleLabel")
-        sub_title = QLabel("클라우드 실시간 동기화 (Supabase)")
+        sub_title = QLabel(f"{CLIENT_SUBTITLE} (클라우드 동기화)")
         sub_title.setObjectName("subtitleLabel")
         title_box.addWidget(title_label)
         title_box.addWidget(sub_title)
@@ -101,9 +102,12 @@ class MainWindow(QMainWindow):
         layout.addWidget(user_info)
 
         # 버전 정보 및 업데이트 확인 버튼
+        p_color = BRAND_COLORS.get("primary", "#4f46e5")
+        p_light = BRAND_COLORS.get("primaryLight", "#eef2ff")
+        p_border = BRAND_COLORS.get("primaryBorder", "#c7d2fe")
         self.ver_btn = QPushButton(f"v{CURRENT_VERSION}")
         self.ver_btn.setToolTip("클릭하여 최신 버전 업데이트 확인")
-        self.ver_btn.setStyleSheet("font-weight: 600; color: #4f46e5; background-color: #eef2ff; border: 1px solid #c7d2fe;")
+        self.ver_btn.setStyleSheet(f"font-weight: 600; color: {p_color}; background-color: {p_light}; border: 1px solid {p_border};")
         self.ver_btn.clicked.connect(self._check_update_manually)
         layout.addWidget(self.ver_btn)
 

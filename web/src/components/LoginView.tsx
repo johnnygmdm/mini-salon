@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { Scissors, Lock, Mail, Loader2, AlertCircle } from "lucide-react";
+import { Lock, Mail, Loader2, AlertCircle } from "lucide-react";
+import { siteConfig } from "@/config/site-config";
 
 interface LoginViewProps {
   onLoginSuccess: (email: string) => void;
@@ -54,14 +55,14 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
       <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-8 shadow-lg shadow-slate-100 sm:p-10">
         {/* 헤더 */}
         <div className="text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-md shadow-indigo-100">
-            <Scissors className="h-7 w-7" />
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-md shadow-indigo-100 text-2xl font-bold">
+            {siteConfig.logoIcon}
           </div>
           <h2 className="mt-4 text-xl font-bold tracking-tight text-slate-900">
-            Mini Salon CRM
+            {siteConfig.clientName} {siteConfig.category}
           </h2>
           <p className="mt-1 text-xs text-slate-500">
-            미니 미용실 고객·시술 관리 시스템
+            {siteConfig.clientSubtitle}
           </p>
         </div>
 

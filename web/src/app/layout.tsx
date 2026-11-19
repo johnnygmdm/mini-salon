@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { siteConfig } from "@/config/site-config";
 
 export const metadata: Metadata = {
-  title: "Mini Salon CRM - 미니 미용실 고객·시술 관리",
-  description: "PC 데스크톱 및 모바일 실시간 동기화 미용실 CRM 시스템",
+  title: `${siteConfig.logoIcon} ${siteConfig.clientName} ${siteConfig.category} - 고객 & 시술 관리`,
+  description: `${siteConfig.clientSubtitle} (PC 데스크톱 및 모바일 실시간 동기화)`,
 };
 
 export const viewport: Viewport = {
