@@ -161,9 +161,13 @@ for ($i = 0; $i -lt 10; $i++) {{
 # 3. 임시 다운로드 파일 삭제
 Remove-Item -LiteralPath $newExe -Force -ErrorAction SilentlyContinue
 
-# 4. PyInstaller 자식 프로세스 상속 방지를 위해 환경변수 제거
-Remove-Item env:_MEIPASS2 -ErrorAction SilentlyContinue
-Remove-Item env:_MEIPASS -ErrorAction SilentlyContinue
+# 4. PyInstaller 6+ 런타임 환경변수 완전 초기화 (새 프로세스가 삭제된 구 임시 폴더를 참조하지 않도록 보장)
+$env:_PYI_APPLICATION_HOME_DIR = $null
+$env:_PYI_ARCHIVE_FILE = $null
+$env:_PYI_SPLASH_IPC = $null
+$env:_PYI_PARENT_PROCESS_LEVEL = $null
+$env:_MEIPASS2 = $null
+$env:_MEIPASS = $null
 
 # 5. 새 버전의 MiniSalon 실행
 Start-Process -FilePath $targetExe -WorkingDirectory $workDir
@@ -175,9 +179,10 @@ Remove-Item -LiteralPath $MyInvocation.MyCommand.Path -Force -ErrorAction Silent
     with open(ps_path, "w", encoding="utf-8") as f:
         f.write(ps_content)
 
-    clean_env = os.environ.copy()
-    clean_env.pop("_MEIPASS2", None)
-    clean_env.pop("_MEIPASS", None)
+    clean_env = {
+        k: v for k, v in os.environ.items()
+        if not k.startswith("_PYI_") and not k.startswith("PYI_") and not k.startswith("_MEI") and not k.startswith("MEI")
+    }
 
     # PowerShell 비동기 실행 (백그라운드에서 동작)
     subprocess.Popen(
