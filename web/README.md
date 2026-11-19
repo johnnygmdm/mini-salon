@@ -4,21 +4,16 @@
 Python PC 데스크톱 앱과 동일한 Supabase 백엔드를 실시간 공유합니다.
 
 ## 기술 스택
-- **Framework**: Next.js 14 (App Router, React 18)
+- **Framework**: Next.js 14 (App Router, React 18, Static HTML Export)
 - **Styling**: Tailwind CSS (모바일/태블릿/PC 완벽 반응형)
 - **Icons**: Lucide React
+- **Hosting**: Cloudflare Pages (무료 무제한 CDN 호스팅)
 - **Database / Auth**: Supabase JS Client (`@supabase/supabase-js`)
 
 ---
 
 ## 로컬 실행 방법
 
-### 1. 패키지 설치 (이미 완료됨)
-```bash
-npm install
-```
-
-### 2. 개발 서버 실행
 더블 클릭으로 `run_web.bat`을 실행하거나 터미널에서:
 ```bash
 npm run dev
@@ -27,21 +22,16 @@ npm run dev
 
 ---
 
-## 클라우드 무료 배포 방법
+## Cloudflare Pages 무료 배포 방법
 
-### 방법 A: Vercel 배포 (가장 추천 & 1분 소요)
-1. GitHub 저장소에 이 프로젝트를 푸시합니다.
-2. [Vercel](https://vercel.com)에 로그인 후 **Add New Project**를 클릭합니다.
-3. Root Directory를 `web`으로 설정합니다.
-4. **Environment Variables**에 아래 2개를 등록하고 **Deploy**를 누릅니다:
-   - `NEXT_PUBLIC_SUPABASE_URL`: `https://plfgpjvqctkynqpzvobz.supabase.co`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: `sb_publishable_FhOIW0yO-BfGg5BC1hbnqQ_q0NMVO1D`
-5. 배포 완료 즉시 나만의 전용 웹 주소(`https://mini-salon-xxx.vercel.app`)가 생성되어 스마트폰에서 바로 사용하실 수 있습니다!
+### 방법 A: Cloudflare 대시보드에서 `out` 폴더 드래그 앤 드롭 (가장 쉽고 추천! 10초 완료)
+1. 터미널에서 `npm run build`를 실행합니다. (이미 `web/out` 폴더 생성 완료)
+2. [Cloudflare 대시보드](https://dash.cloudflare.com) 로그인
+3. 좌측 메뉴 **Workers & Pages** -> **Create application** -> **Pages** 탭 클릭
+4. **Upload assets (자산 업로드)** 선택
+5. 프로젝트 이름: `mini-salon` 입력
+6. 탐색기에서 `C:\project\mini-salon\web\out` 폴더를 화면에 **드래그 앤 드롭** 후 **Deploy site** 클릭!
+7. 즉시 `https://mini-salon-xxx.pages.dev` 무료 주소 발급 완료!
 
-### 방법 B: Cloudflare Pages 배포
-1. Cloudflare Dashboard -> **Compute (Workers & Pages)** -> **Create application** -> **Pages**
-2. GitHub 저장소 연결
-3. Build setting:
-   - Framework preset: `Next.js`
-   - Root directory: `web`
-   - Environment variables 등록
+### 방법 B: CLI 마법사 (`deploy_cloudflare.bat`) 실행
+- `web/deploy_cloudflare.bat` 더블 클릭 ➡️ Cloudflare 로그인 승인 ➡️ 자동 배포 완료!
