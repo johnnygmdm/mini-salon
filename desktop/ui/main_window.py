@@ -16,6 +16,8 @@ from services.treatment_service import TreatmentService
 from services.auth_service import AuthService
 from ui.customer_dialog import CustomerDialog
 from ui.treatment_dialog import TreatmentDialog
+from ui.update_dialog import UpdateDialog
+from services.updater_service import CURRENT_VERSION, UpdateCheckWorker
 
 
 class MainWindow(QMainWindow):
@@ -35,8 +37,13 @@ class MainWindow(QMainWindow):
         self._search_timer.setSingleShot(True)
         self._search_timer.timeout.connect(self._do_search)
 
+        self.update_worker: Optional[UpdateCheckWorker] = None
+
         self._init_ui()
         self.refresh_customers()
+
+        # 앱 실행 1.5초 후 백그라운드 자동 업데이트 확인
+        QTimer.singleShot(1500, self._check_update_silently)
 
     def _init_ui(self):
         central_widget = QWidget()
@@ -92,6 +99,13 @@ class MainWindow(QMainWindow):
         user_info = QLabel(f"👤 {self.current_user_email}")
         user_info.setStyleSheet("font-weight: 600; color: #475569; padding-right: 8px;")
         layout.addWidget(user_info)
+
+        # 버전 정보 및 업데이트 확인 버튼
+        self.ver_btn = QPushButton(f"v{CURRENT_VERSION}")
+        self.ver_btn.setToolTip("클릭하여 최신 버전 업데이트 확인")
+        self.ver_btn.setStyleSheet("font-weight: 600; color: #4f46e5; background-color: #eef2ff; border: 1px solid #c7d2fe;")
+        self.ver_btn.clicked.connect(self._check_update_manually)
+        layout.addWidget(self.ver_btn)
 
         refresh_btn = QPushButton("🔄 새로고침")
         refresh_btn.setToolTip("고객 및 시술 내역 새로고침")
@@ -526,3 +540,30 @@ class MainWindow(QMainWindow):
         if confirm == QMessageBox.Yes:
             AuthService.sign_out()
             self.close()
+
+    # -------------------------------------------------------------------------
+    # 자동 업데이트 확인
+    # -------------------------------------------------------------------------
+    def _check_update_silently(self):
+        """앱 시작 시 조용히 업데이트 확인 (새 버전 발견 시에만 팝업)"""
+        self.update_worker = UpdateCheckWorker()
+        self.update_worker.update_available.connect(self._show_update_dialog)
+        self.update_worker.start()
+
+    def _check_update_manually(self):
+        """버튼 클릭 시 수동 업데이트 확인"""
+        self.status_bar.showMessage("최신 업데이트를 확인하는 중입니다...")
+        self.update_worker = UpdateCheckWorker()
+        self.update_worker.update_available.connect(self._show_update_dialog)
+        self.update_worker.no_update.connect(lambda: QMessageBox.information(
+            self, "업데이트 확인", f"현재 최신 버전(v{CURRENT_VERSION})을 사용하고 있습니다."
+        ))
+        self.update_worker.check_failed.connect(lambda err: QMessageBox.warning(
+            self, "확인 실패", f"업데이트 확인 중 오류가 발생했습니다:\n{err}"
+        ))
+        self.update_worker.start()
+
+    def _show_update_dialog(self, update_info: dict):
+        dialog = UpdateDialog(self, update_info=update_info)
+        dialog.exec()
+
