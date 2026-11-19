@@ -1,11 +1,20 @@
 import os
+import sys
 import json
 from pathlib import Path
 from dotenv import load_dotenv
 from supabase import create_client, Client
 
-# 프로젝트 디렉터리 및 환경변수 경로 설정
-DESKTOP_DIR = Path(__file__).resolve().parent
+# 기본 내장 접속 정보 (exe 파일 단독 실행 시에도 정상 연결)
+DEFAULT_SUPABASE_URL = "https://plfgpjvqctkynqpzvobz.supabase.co"
+DEFAULT_SUPABASE_ANON_KEY = "sb_publishable_FhOIW0yO-BfGg5BC1hbnqQ_q0NMVO1D"
+
+# 실행 경로 설정
+if getattr(sys, "frozen", False):
+    DESKTOP_DIR = Path(sys.executable).resolve().parent
+else:
+    DESKTOP_DIR = Path(__file__).resolve().parent
+
 PROJECT_ROOT = DESKTOP_DIR.parent
 SESSION_FILE = DESKTOP_DIR / ".session.json"
 
@@ -19,8 +28,8 @@ if env_path.exists():
 else:
     load_dotenv()
 
-SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip()
-SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "").strip()
+SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip() or DEFAULT_SUPABASE_URL
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "").strip() or DEFAULT_SUPABASE_ANON_KEY
 
 _supabase_client: Client | None = None
 

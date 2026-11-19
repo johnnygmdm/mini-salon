@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "releaseDate": "2026-11-19",
-  "downloadUrl": "https://github.com/johnnygmdm/mini-salon/releases/latest/download/MiniSalon.exe",
-  "changelog": "최초 정식 버전 출시 (고객 관리 & 1:N 시술 내역 연동)"
+  "downloadUrl": "https://github.com/johnnygmdm/mini-salon/releases/download/v1.0.1/MiniSalon.exe",
+  "changelog": "[자동 업데이트 테스트] v1.0.1 정식 패치 적용 완료! (원클릭 자동 업데이트 검증)"
 }
